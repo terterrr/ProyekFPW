@@ -4,12 +4,13 @@ const { default: mongoose } = require("mongoose");
 // const bossRouter = require("./src/routes/boss");
 const authRouter = require("./src/routes/auth");
 const app = express();
-const port = 3001;
+
 require(`dotenv`).config();
 
 const cors = require("cors");
+const allowedOrigin = process.env.FRONTEND_URL || true;
 const corsOptions = {
-  origin: true, // Allow dynamic origin for LAN access
+  origin: allowedOrigin,
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -38,15 +39,15 @@ app.use("/api/v1/history", historyRouter);
 app.use("/api/v1/announcements", announcementsRouter);
 app.use("/api/v1/users", usersRouter);
 
+
 const initApp = async () => {
   try {
     await mongoose.connect(process.env.DB_URL);
     console.log("Koneksi ke MongoDB Berhasil");
-    app.listen(port, () =>
-      console.log(`Example app listening on port ${port}!`)
-    );
   } catch (error) {
     console.log("error bro", error);
   }
 };
 initApp();
+
+module.exports = app;
